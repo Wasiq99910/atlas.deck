@@ -1,8 +1,10 @@
 //go:build gobake
+
 package bake_recipe
 
 import (
 	"fmt"
+
 	"github.com/fezcode/gobake"
 )
 
@@ -56,6 +58,11 @@ func Run(bake *gobake.Engine) error {
 
 	bake.Task("clean", "Removes build artifacts", func(ctx *gobake.Context) error {
 		return ctx.Remove("build")
+	})
+
+	bake.Task("name", "Show project name", func(ctx *gobake.Context) error {
+		fmt.Printf("%s\n", bake.Info.Name)
+		return nil
 	})
 
 	return nil

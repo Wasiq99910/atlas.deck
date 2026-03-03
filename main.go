@@ -48,5 +48,6 @@ func showHelp() {
 	fmt.Println("  If not found, it falls back to the global configuration in ~/.atlas/deck.piml.")
 	fmt.Println("\nTUI Controls:")
 	fmt.Println("  [Key]          Execute the command mapped to that key")
-	fmt.Println("  q, esc, ctrl+c Quit the application")
+	fmt.Println("  ctrl+l         Clear the log view")
+	fmt.Println("  ctrl+c         Quit the application")
 }
