@@ -25,6 +25,7 @@ type Model struct {
 
 	RunningLabel string
 	RunningCmd   string
+	Cmd          *exec.Cmd
 
 	// Logs
 	Viewport   viewport.Model
@@ -67,6 +68,7 @@ func (m Model) Init() tea.Cmd {
 
 type outputMsg string
 type finishMsg struct{ err error }
+type commandStartedMsg struct{ cmd *exec.Cmd }
 
 func waitForOutput(ch chan string) tea.Cmd {
 	return func() tea.Msg {
@@ -87,7 +89,19 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.KeyMsg:
 		switch msg.String() {
 		case "ctrl+c":
+			if m.Running && m.Cmd != nil && m.Cmd.Process != nil {
+				m.Cmd.Process.Kill()
+			}
 			return m, tea.Quit
+		case "ctrl+x": // Kill running process
+			if m.Running && m.Cmd != nil && m.Cmd.Process != nil {
+				m.Cmd.Process.Kill()
+				m.Status = "Process terminated by user"
+				m.Logs = append(m.Logs, lipgloss.NewStyle().Foreground(lipgloss.Color("#ff5555")).Render(">>> [KILL] Process terminated by user"))
+				m.Viewport.SetContent(strings.Join(m.Logs, "\n"))
+				m.Viewport.GotoBottom()
+			}
+			return m, nil
 		case "ctrl+l": // Clear logs
 			m.Logs = []string{}
 			if m.Running {
@@ -135,6 +149,10 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.Spinner, cmd = m.Spinner.Update(msg)
 		return m, cmd
 
+	case commandStartedMsg:
+		m.Cmd = msg.cmd
+		return m, nil
+
 	case outputMsg:
 		m.Logs = append(m.Logs, string(msg))
 		m.Viewport.SetContent(strings.Join(m.Logs, "\n"))
@@ -143,9 +161,15 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	case finishMsg:
 		m.Running = false
+		m.Cmd = nil
 		if msg.err != nil {
-			m.Status = fmt.Sprintf("Error: %v", msg.err)
-			m.Logs = append(m.Logs, lipgloss.NewStyle().Foreground(lipgloss.Color("#ff5555")).Render(fmt.Sprintf("!!! Error: %v", msg.err)))
+			// Ignore error if it was a kill signal
+			if !strings.Contains(msg.err.Error(), "exit status 1") && !strings.Contains(msg.err.Error(), "killed") {
+				m.Status = fmt.Sprintf("Error: %v", msg.err)
+				m.Logs = append(m.Logs, lipgloss.NewStyle().Foreground(lipgloss.Color("#ff5555")).Render(fmt.Sprintf("!!! Error: %v", msg.err)))
+			} else if m.Status != "Process terminated by user" {
+				m.Status = "Completed with exit code"
+			}
 		} else {
 			m.Status = "Completed"
 			m.Logs = append(m.Logs, lipgloss.NewStyle().Foreground(lipgloss.Color("#50fa7b")).Render("--- Finished Successfully ---"))
@@ -189,7 +213,7 @@ func (m Model) runCommand(command string) tea.Cmd {
 			m.FinishChan <- cmd.Wait()
 		}()
 
-		return nil
+		return commandStartedMsg{cmd: cmd}
 	}
 }
 
@@ -248,7 +272,12 @@ func (m Model) View() string {
 	s.WriteString(StatusStyle.Render(fmt.Sprintf("Last Key: [%s] • Status: %s", m.LastKey, m.Status)))
 	s.WriteString("\n")
 	s.WriteString(m.Viewport.View())
-	s.WriteString("\n" + StatusStyle.Render("Press ctrl+c to quit • ctrl+l to clear logs"))
+	
+	footerHints := "Press ctrl+c to quit • ctrl+l to clear logs"
+	if m.Running {
+		footerHints += " • " + lipgloss.NewStyle().Foreground(RedColor).Render("ctrl+x to kill process")
+	}
+	s.WriteString("\n" + StatusStyle.Render(footerHints))
 
 	return lipgloss.Place(m.Width, m.Height, lipgloss.Center, lipgloss.Center, s.String())
 }
